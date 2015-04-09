@@ -19,7 +19,7 @@ case class Delays (
 case class Flight (date: DateTime, //Tip: Use ParserUtils.getDateTime
                    dayOfWeek: Int,
                    departureTime: Int,
-                   crsDepatureTime: Int,
+                   crsDepartureTime: Int,
                    arrTime: Int,
                    cRSArrTime: Int,
                    uniqueCarrier: String,
@@ -43,18 +43,18 @@ object Flight {
   * Create a new Flight Class from a CSV file
   *
   */
-  def apply(fields: Seq[String]): Flight = {
+  def apply(fields: Array[String]): Flight = {
     val (firstChunk, secondChunk) = fields.splitAt(22)
-    val Seq(year, month, dayOfMonth, dayOfWeek, departureTime, crsDepatureTime, arrTime, cRSArrTime, uniqueCarrier,
+    val Array(year, month, dayOfMonth, dayOfWeek, departureTime, crsDepartureTime, arrTime, cRSArrTime, uniqueCarrier,
     flightNum, _, actualElapsedTime, cRSElapsedTime, airTime, arrDelay, depDelay, origin, dest, distance, _, _, cancelled) = firstChunk
 
-    val Seq(cancellationCode, diverted, carrierDelay, weatherDelay, nASDelay, securityDelay, lateAircraftDelay) = secondChunk
+    val Array(cancellationCode, diverted, carrierDelay, weatherDelay, nASDelay, securityDelay, lateAircraftDelay) = secondChunk
 
     Flight(
       ParserUtils.getDateTime(year.toInt,month.toInt, dayOfMonth.toInt),
       dayOfWeek.toInt,
       departureTime.toInt,
-      crsDepatureTime.toInt,
+      crsDepartureTime.toInt,
       arrTime.toInt,
       cRSArrTime.toInt,
       uniqueCarrier.toString,

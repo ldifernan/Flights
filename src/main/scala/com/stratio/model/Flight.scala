@@ -70,8 +70,8 @@ object Flight {
       parseCancelled(cancelled),
       cancellationCode.toInt,
       diverted.toString,
-      Delays(parseCancelled(carrierDelay), parseCancelled(weatherDelay), parseCancelled(nASDelay), parseCancelled(securityDelay),
-        parseCancelled(lateAircraftDelay)))
+      Delays(parseCancelled(carrierDelay), parseCancelled(weatherDelay), parseCancelled(nASDelay),
+        parseCancelled(securityDelay),parseCancelled(lateAircraftDelay)))
   }
 
   /*

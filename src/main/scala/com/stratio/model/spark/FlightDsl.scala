@@ -34,8 +34,9 @@ class FlightCsvReader(self: RDD[String]) {
    *
    */
   def errorOrFlight: RDD[Either[(String, String), Flight]] = {
-    val headers = self.first
-    self.filter(_ != headers).flatMap(line => {
+//    val headers = self.first
+//    self.filter(_ != headers)
+      self.flatMap(line => {
       val fields = line.split(",")
       val errorList = Flight.extractErrors(fields)
       if (errorList.isEmpty) {
@@ -58,13 +59,13 @@ class FlightCsvReader(self: RDD[String]) {
      * Obtain the minimum fuel's consumption using a external RDD with the fuel price by Month
      *
      */
-    def minFuelConsumptionByMonthAndAirport(fuelPrice: RDD[String]): RDD[(String, Short)] = ??? //{
-//      val prices = fuelPrice.map(x=>x.split(",")).map(linea=>(linea(0).toInt, linea(1).toInt, linea(2).toInt))
-//      val origMonthDist = self.map(linea=>((linea.date.monthOfYear().get(), linea.origin),linea.distance)).reduceByKey(_+_)
-//        .map(linea=> ((linea._1._1),(linea._1._2,linea._2,prices.map(_._3))))
-//      val result = origMonthDist.map(x=>(x._1,(x._2._1 , x._2._2 * (x._2._3))))
-//      result.map(x=>(x._2._1, (x._1,x._2._2))).reduceByKey((x,y)=>if(x._2 < y._2) x else y)
-//    }
+    def minFuelConsumptionByMonthAndAirport(fuelPrice: RDD[String]): RDD[(String, Short)] =  {
+      val prices = fuelPrice.map(x=>x.split(",")).map(linea=>((linea(0).toInt, linea(1).toInt), linea(2).toInt))
+      val origMonthDist = self.map(linea=>((linea.date.year().get(), linea.date.monthOfYear().get(), linea.origin),
+        linea.distance)).reduceByKey(_+_).map(linea=>((linea._1._1,linea._1._2),(linea._1._3,linea._2)))
+      origMonthDist.join(prices).map(linea=>((linea._1._1, linea._1._2),(linea._2._1._1,linea._2._1._2*linea._2._2)))
+        .map(x=>(x._2._1,x._2._2.toShort))
+    }
 
     /**
      *

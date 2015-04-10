@@ -3,11 +3,11 @@ package com.stratio.model
 import com.stratio.utils.ParserUtils
 import org.joda.time.DateTime
 
-sealed class Cancelled
+sealed case class Cancelled (id: String) {override def toString: String = id}
 
-object OnTime extends Cancelled
-object Cancel extends Cancelled
-object Unknown extends Cancelled
+object OnTime extends Cancelled (id ="OnTime")
+object Cancel extends Cancelled (id ="Cancel")
+object Unknown extends Cancelled (id ="Unknown")
 
 case class Delays (
                     carrier: Cancelled,
@@ -82,7 +82,7 @@ case class Flight (date: DateTime, //Tip: Use ParserUtils.getDateTime
 
       val Array(cancellationCode, diverted, carrierDelay, weatherDelay, nASDelay, securityDelay, lateAircraftDelay) = secondChunk
 
-      val errorsInt = Seq(year,month, dayOfMonth, dayOfWeek, departureTime, crsDepatureTime, arrTime, cRSArrTime, flightNum,
+      val errorsInt = Seq(year,month, dayOfMonth, departureTime, crsDepatureTime, arrTime, cRSArrTime, flightNum,
         actualElapsedTime, cRSElapsedTime, airTime, arrDelay, depDelay, distance,cancellationCode).flatMap(evaluarInt(_))
       val errorsEnum = evaluarEnum(cancelled)
 
@@ -104,6 +104,8 @@ case class Flight (date: DateTime, //Tip: Use ParserUtils.getDateTime
           case e: NumberFormatException => 1
         }
     }
+
+
     def evaluarEnum(elemento : String): Option[(String)] = {
       if(evalEnum(elemento)==1) Some(("Error Tipo 1"))
       else if (evalEnum(elemento)==2) Some(("Error Tipo 2"))
@@ -114,8 +116,8 @@ case class Flight (date: DateTime, //Tip: Use ParserUtils.getDateTime
       else
         try {
           Integer.parseInt(in.trim)
-          if (in.toInt!=0 || in.toInt!=1){1}
-          else 0
+          if (in.toInt==0 || in.toInt==1) 0
+          else 1
         } catch {
           case e: NumberFormatException => 1
         }

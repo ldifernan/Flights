@@ -63,12 +63,10 @@ class FlightDslTest extends FlatSpec with ShouldMatchers with LocalSparkSqlConte
   }
 
 
-  it should "get all ther parsing errors" in new WithErrorsFlightsText {
-
     it should "get all the parsing errors" in new WithErrorsFlightsText {
 
-      errorTextFlights.toErrors.count should be(3)
+      errorTextFlights.toErrors.count should be(4)
       errorTextFlights.toErrors.countByKey should be(2)
     }
-  }
+
 }

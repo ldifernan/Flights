@@ -83,9 +83,14 @@ case class Flight (date: DateTime, //Tip: Use ParserUtils.getDateTime
 
       val errorsInt = Seq(year,month, dayOfMonth, dayOfWeek, departureTime, crsDepatureTime, arrTime, cRSArrTime, flightNum,
         actualElapsedTime, cRSElapsedTime, airTime, arrDelay, depDelay, distance,cancellationCode).flatMap(evaluarInt(_))
-      val errorsEnum = Seq(cancelled.toString)
+      val errorsEnum = evaluarEnum(cancelled)
 
       errorsInt++errorsEnum
+    }
+    def evaluarInt(elemento : String): Option[(String)] = {
+      if(evalInt(elemento)==1) Some(("Error Tipo 1"))
+      else if (evalInt(elemento)==2) Some(("Error Tipo 2"))
+      else None
     }
 
     def evalInt(in: String): Int = {
@@ -98,11 +103,24 @@ case class Flight (date: DateTime, //Tip: Use ParserUtils.getDateTime
           case e: NumberFormatException => 1
         }
     }
-    def evaluarInt(elemento : String): Option[(String)] = {
-      if(evalInt(elemento)==1) Some(("Error Tipo 1"))
-      else if (evalInt(elemento)==2) Some(("Error Tipo 2"))
+    def evaluarEnum(elemento : String): Option[(String)] = {
+      if(evalEnum(elemento)==1) Some(("Error Tipo 1"))
+      else if (evalEnum(elemento)==2) Some(("Error Tipo 2"))
       else None
     }
+    def evalEnum(in: String): Int = {
+      if(in == "NA") 2
+      else
+        try {
+          Integer.parseInt(in.trim)
+          if (in.toInt!=0 || in.toInt!=1){1}
+          else 0
+        } catch {
+          case e: NumberFormatException => 1
+        }
+    }
+
+
 
     /*
     *

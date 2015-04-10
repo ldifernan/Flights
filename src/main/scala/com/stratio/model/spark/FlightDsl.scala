@@ -84,6 +84,7 @@ class FlightCsvReader(self: RDD[String]) {
      */
     def asignGhostFlights(elapsedSeconds: Int): RDD[Flight] = ???
 
+
   }
 
 

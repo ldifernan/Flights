@@ -69,10 +69,18 @@ class FlightCsvReader(self: RDD[String]) {
      * Obtain the average distance flyed by airport, taking the origin field as the airport to group
      *
      */
+
     def averageDistanceByAirport: RDD[(String, Float)] = {
       val distances = self.map(linea => (linea.origin,linea.distance.toFloat))
       distances.reduceByKey(_+_).map(linea=>(linea._1,linea._2/self.count()))
     }
+
+    /**
+     *
+     * Reasign the dest Airport and destHour to the ghost flights being a ghost flight those whom doesn't
+     *
+     */
+    def asignGhostFlights(elapsedSeconds: Int): RDD[Flight] = ???
 
   }
 
